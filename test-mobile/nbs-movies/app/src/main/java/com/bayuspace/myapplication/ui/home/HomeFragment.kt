@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.bayuspace.myapplication.R
 import com.bayuspace.myapplication.databinding.FragmentHomeBinding
+import com.bayuspace.myapplication.ui.home.banner.BannerAdapter
 
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
@@ -34,6 +35,13 @@ class HomeFragment : Fragment() {
                 true
             }
         }
+
+        setupBanner()
+    }
+
+    private fun setupBanner() {
+        binding.vpBanner.adapter =
+            BannerAdapter(listOf(R.drawable.ic_logo, R.drawable.ic_logo, R.drawable.ic_logo))
     }
 
     override fun onDestroyView() {
