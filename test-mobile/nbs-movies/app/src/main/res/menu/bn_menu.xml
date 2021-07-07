@@ -19,6 +19,6 @@
         android:id="@+id/menu_more"
         android:enabled="true"
         android:icon="@drawable/ic_more"
-        android:title="@string/favorit"/>
+        android:title="@string/more"/>
 
 </menu>
