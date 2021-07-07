@@ -22,8 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             app:iconifiedByDefault="false"
-            app:queryHint="@string/hint"
-            app:searchIcon="@null" />
+            app:queryHint="@string/hint" />
     </androidx.appcompat.widget.Toolbar>
 
     <TextView

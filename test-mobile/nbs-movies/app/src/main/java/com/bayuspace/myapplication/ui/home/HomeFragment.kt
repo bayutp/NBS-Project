@@ -29,7 +29,7 @@ class HomeFragment : Fragment() {
             setOnMenuItemClickListener {
                 if (it.itemId == R.id.menu_notif) Toast.makeText(
                     requireContext(),
-                    "Under Construction!",
+                    R.string.coming_soon,
                     Toast.LENGTH_SHORT
                 ).show()
                 true

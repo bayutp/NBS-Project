@@ -33,6 +33,10 @@ class PopularFragment : Fragment() {
                 color,
                 PorterDuff.Mode.SRC_IN
             )
+            findViewById<ImageView>(androidx.appcompat.R.id.search_mag_icon).setColorFilter(
+                color,
+                PorterDuff.Mode.SRC_IN
+            )
             findViewById<EditText>(androidx.appcompat.R.id.search_src_text).apply {
                 setTextColor(color)
                 setHintTextColor(color)
