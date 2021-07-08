@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bayuspace.myapplication.R
 import com.bayuspace.myapplication.databinding.FragmentHomeBinding
 import com.bayuspace.myapplication.ui.home.banner.BannerAdapter
@@ -24,16 +25,41 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.toolbarHome.apply {
-            inflateMenu(R.menu.home_menu)
-            setOnMenuItemClickListener {
-                if (it.itemId == R.id.menu_notif) Toast.makeText(
-                    requireContext(),
-                    R.string.coming_soon,
-                    Toast.LENGTH_SHORT
-                ).show()
-                true
+        val moviesAdapter = MoviesAdapter()
+        moviesAdapter.setData(
+            listOf(
+                R.drawable.ic_launcher_background,
+                R.drawable.ic_launcher_background,
+                R.drawable.ic_launcher_background,
+                R.drawable.ic_launcher_background,
+                R.drawable.ic_launcher_background
+            )
+        )
+        with(binding) {
+            toolbarHome.apply {
+                inflateMenu(R.menu.home_menu)
+                setOnMenuItemClickListener {
+                    if (it.itemId == R.id.menu_notif) Toast.makeText(
+                        requireContext(),
+                        R.string.coming_soon,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    true
+                }
             }
+            rvPopular.apply {
+                setHasFixedSize(true)
+                layoutManager =
+                    LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                adapter = moviesAdapter
+            }
+            rvComingSoon.apply {
+                setHasFixedSize(true)
+                layoutManager =
+                    LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                adapter = moviesAdapter
+            }
+
         }
 
         setupBanner()

@@ -9,6 +9,8 @@ import android.widget.EditText
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.bayuspace.myapplication.R
 import com.bayuspace.myapplication.databinding.FragmentPopularBinding
 
 class FavoritFragment : Fragment() {
@@ -25,19 +27,37 @@ class FavoritFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.svPopular.apply {
-            val color = ContextCompat.getColor(requireContext(), android.R.color.darker_gray)
-            findViewById<ImageView>(androidx.appcompat.R.id.search_close_btn).setColorFilter(
-                color,
-                PorterDuff.Mode.SRC_IN
+        val favoriteAdapter = FavoritesAdapter()
+        favoriteAdapter.setData(
+            listOf(
+                R.drawable.ic_launcher_background,
+                R.drawable.ic_launcher_background,
+                R.drawable.ic_launcher_background,
+                R.drawable.ic_launcher_background,
+                R.drawable.ic_launcher_background
             )
-            findViewById<ImageView>(androidx.appcompat.R.id.search_mag_icon).setColorFilter(
-                color,
-                PorterDuff.Mode.SRC_IN
-            )
-            findViewById<EditText>(androidx.appcompat.R.id.search_src_text).apply {
-                setTextColor(color)
-                setHintTextColor(color)
+        )
+        with(binding) {
+            svPopular.apply {
+                val color = ContextCompat.getColor(requireContext(), android.R.color.darker_gray)
+                findViewById<ImageView>(androidx.appcompat.R.id.search_close_btn).setColorFilter(
+                    color,
+                    PorterDuff.Mode.SRC_IN
+                )
+                findViewById<ImageView>(androidx.appcompat.R.id.search_mag_icon).setColorFilter(
+                    color,
+                    PorterDuff.Mode.SRC_IN
+                )
+                findViewById<EditText>(androidx.appcompat.R.id.search_src_text).apply {
+                    setTextColor(color)
+                    setHintTextColor(color)
+                }
+            }
+            rvSearchResult.apply {
+                setHasFixedSize(true)
+                layoutManager =
+                    LinearLayoutManager(requireContext())
+                adapter = favoriteAdapter
             }
         }
     }

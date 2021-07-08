@@ -40,6 +40,7 @@ ext{
     fragment_version = '1.4.0-alpha04'
     lifecycle_version = "2.4.0-alpha04"
     indicator_version = '1.0.3'
+    civ_version = '3.1.0'
 }
 
 dependencies {
@@ -58,4 +59,5 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:$lifecycle_version"
     implementation "androidx.navigation:navigation-ui-ktx:$lifecycle_version"
     implementation "com.romandanylyk:pageindicatorview:$indicator_version"
+    implementation "de.hdodenhof:circleimageview:$civ_version"
 }
