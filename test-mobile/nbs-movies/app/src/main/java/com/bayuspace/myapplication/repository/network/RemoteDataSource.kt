@@ -32,6 +32,9 @@ class RemoteDataSource(private val service: MovieApiService) : BaseDataSource() 
     suspend fun getDiscoverMovies() =
         suspendDataResult { getResult { service.getDiscoverMovies() } }
 
+    suspend fun getUpcomingMovies() =
+        suspendDataResult { getResult { service.getUpcomingMovies() } }
+
     suspend fun getMovieDetail(movieId: Int) =
         suspendDataResult { getResult { service.getMovieDetail(movieId) } }
 
