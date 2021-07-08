@@ -3,11 +3,14 @@ package com.bayuspace.myapplication.ui.home
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bayuspace.myapplication.BuildConfig
 import com.bayuspace.myapplication.databinding.ItemMoviesBinding
+import com.bayuspace.myapplication.model.response.Result
+import com.bayuspace.myapplication.utils.loadImage
 
 class MoviesAdapter : RecyclerView.Adapter<MoviesAdapter.ViewHolder>() {
 
-    private val listItem = mutableListOf<Int>()
+    private val listItem = mutableListOf<Result>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemMoviesBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -22,7 +25,7 @@ class MoviesAdapter : RecyclerView.Adapter<MoviesAdapter.ViewHolder>() {
         return listItem.size
     }
 
-    fun setData(items: List<Int>) {
+    fun setData(items: List<Result>) {
         listItem.clear()
         listItem.addAll(items)
         notifyDataSetChanged()
@@ -30,8 +33,8 @@ class MoviesAdapter : RecyclerView.Adapter<MoviesAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val binding: ItemMoviesBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: Int) {
-            binding.ivPosterMovies.setImageResource(item)
+        fun bind(item: Result) {
+            binding.ivPosterMovies.loadImage("${BuildConfig.IMAGE_BASE_URL}${item.backdropPath}")
         }
     }
 }

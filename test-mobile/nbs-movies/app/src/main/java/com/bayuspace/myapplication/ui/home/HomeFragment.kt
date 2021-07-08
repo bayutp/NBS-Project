@@ -1,19 +1,26 @@
 package com.bayuspace.myapplication.ui.home
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bayuspace.myapplication.R
+import com.bayuspace.myapplication.base.BaseFragment
 import com.bayuspace.myapplication.databinding.FragmentHomeBinding
 import com.bayuspace.myapplication.ui.home.banner.BannerAdapter
+import com.bayuspace.myapplication.utils.gone
+import com.bayuspace.myapplication.utils.showMsg
+import com.bayuspace.myapplication.utils.visible
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class HomeFragment : Fragment() {
+class HomeFragment : BaseFragment() {
     private var _binding: FragmentHomeBinding? = null
+    private lateinit var moviesAdapter: MoviesAdapter
+    private lateinit var upcomingMovieAdapter: MoviesAdapter
     private val binding get() = _binding!!
+    private val homeViewModel: HomeViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -23,18 +30,9 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val moviesAdapter = MoviesAdapter()
-        moviesAdapter.setData(
-            listOf(
-                R.drawable.ic_launcher_background,
-                R.drawable.ic_launcher_background,
-                R.drawable.ic_launcher_background,
-                R.drawable.ic_launcher_background,
-                R.drawable.ic_launcher_background
-            )
-        )
+    override fun onViewReady(savedInstanceState: Bundle?) {
+        moviesAdapter = MoviesAdapter()
+        upcomingMovieAdapter = MoviesAdapter()
         with(binding) {
             toolbarHome.apply {
                 inflateMenu(R.menu.home_menu)
@@ -57,17 +55,49 @@ class HomeFragment : Fragment() {
                 setHasFixedSize(true)
                 layoutManager =
                     LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-                adapter = moviesAdapter
+                adapter = upcomingMovieAdapter
             }
 
         }
 
-        setupBanner()
+        homeViewModel.apply {
+            getDiscoverMovies()
+            getUpcomingMovies()
+        }
     }
 
-    private fun setupBanner() {
-        binding.vpBanner.adapter =
-            BannerAdapter(listOf(R.drawable.ic_logo, R.drawable.ic_logo, R.drawable.ic_logo))
+    override fun observeData() {
+        with(homeViewModel) {
+            observeDiscoverMovies().onResult {
+                val listPoster = mutableListOf<String>()
+                it.results.take(5).forEach { data ->
+                    data.backdropPath?.let { poster -> listPoster.add(poster) }
+                }
+                binding.vpBanner.adapter = BannerAdapter(listPoster.toList())
+                moviesAdapter.setData(it.results)
+            }
+            observeUpcomingMovies().onResult {
+                upcomingMovieAdapter.setData(it.results)
+            }
+            observeLoading().onResult {
+                if (it) {
+                    binding.apply {
+                        pbHome.visible()
+                        containerHome.gone()
+                    }
+                } else {
+                    binding.apply {
+                        pbHome.gone()
+                        containerHome.visible()
+                    }
+                }
+            }
+            observeError().onResult {
+                requireContext().showMsg(
+                    it.msg ?: "Terjadi kesalahan! silahkan coba beberapa saat lagi :("
+                )
+            }
+        }
     }
 
     override fun onDestroyView() {

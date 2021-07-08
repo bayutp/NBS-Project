@@ -5,6 +5,7 @@ import com.bayuspace.myapplication.model.response.MovieCastingResponse
 import com.bayuspace.myapplication.model.response.MovieDetailResponse
 import com.bayuspace.myapplication.model.response.MovieResponse
 import com.bayuspace.myapplication.utils.getCurrentDate
+import com.bayuspace.myapplication.utils.getCurrentYear
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -22,7 +23,7 @@ interface MovieApiService {
     suspend fun getUpcomingMovies(
         @Query("api_key") apiKey: String = BuildConfig.API_KEY,
         @Query("sort_by") sort: String = "popularity.desc",
-        @Query("year") year: Int = getCurrentDate().toInt() + 1
+        @Query("year") year: Int = getCurrentYear().toInt() + 1
     ): Response<MovieResponse>
 
     @GET("movie/{id_movie}")
