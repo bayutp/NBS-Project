@@ -11,7 +11,7 @@ interface MovieDao {
     @Query("SELECT * FROM tbl_movie WHERE is_bookmark = 1 ORDER BY created_at DESC")
     suspend fun getMovies(): List<MovieEntity>
 
-    @Query("SELECT * FROM tbl_movie WHERE title LIKE :query")
+    @Query("SELECT * FROM tbl_movie WHERE title LIKE :query AND is_bookmark = 1")
     suspend fun searchMovies(query: String): List<MovieEntity>
 
     @Query("SELECT * from tbl_movie WHere id = :id AND is_bookmark = 1")
