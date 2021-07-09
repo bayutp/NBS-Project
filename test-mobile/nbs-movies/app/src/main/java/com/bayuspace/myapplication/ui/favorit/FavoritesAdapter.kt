@@ -9,7 +9,7 @@ import com.bayuspace.myapplication.model.entity.MovieEntity
 import com.bayuspace.myapplication.utils.formatDate
 import com.bayuspace.myapplication.utils.loadImage
 
-class FavoritesAdapter(private val listener: (MovieEntity) -> Unit) : RecyclerView.Adapter<FavoritesAdapter.ViewHolder>() {
+class FavoritesAdapter(private val listener: (MovieEntity) -> Unit, private val deleteListener: (MovieEntity) -> Unit) : RecyclerView.Adapter<FavoritesAdapter.ViewHolder>() {
 
     private val listItem = mutableListOf<MovieEntity>()
 
@@ -45,6 +45,7 @@ class FavoritesAdapter(private val listener: (MovieEntity) -> Unit) : RecyclerVi
                     genre += if (index != item.genre.lastIndex) "${dataGenre.name}, " else dataGenre.name
                 }
                 tvCategoryFavorite.text = genre
+                ivFavorite.setOnClickListener { deleteListener(item) }
                 itemView.setOnClickListener { listener(item) }
             }
         }

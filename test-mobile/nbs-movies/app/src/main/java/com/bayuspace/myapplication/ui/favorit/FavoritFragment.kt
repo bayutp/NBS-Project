@@ -13,9 +13,13 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bayuspace.myapplication.base.BaseFragment
 import com.bayuspace.myapplication.databinding.FragmentPopularBinding
+import com.bayuspace.myapplication.model.entity.MovieEntity
 import com.bayuspace.myapplication.ui.detail.DetailActivity
+import com.bayuspace.myapplication.ui.detail.DetailViewModel
 import com.bayuspace.myapplication.ui.home.HomeFragment.Companion.KEY_MOVIE
+import com.bayuspace.myapplication.utils.getCurrentDate
 import com.bayuspace.myapplication.utils.gone
+import com.bayuspace.myapplication.utils.showMsg
 import com.bayuspace.myapplication.utils.visible
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -23,6 +27,7 @@ class FavoritFragment : BaseFragment() {
     private var _binding: FragmentPopularBinding? = null
     private val binding get() = _binding!!
     private val favoritesViewModel: FavoritesViewModel by viewModel()
+    private val detailViewModel: DetailViewModel by viewModel()
     private lateinit var favoriteAdapter: FavoritesAdapter
 
     override fun onCreateView(
@@ -34,10 +39,20 @@ class FavoritFragment : BaseFragment() {
     }
 
     override fun onViewReady(savedInstanceState: Bundle?) {
-        favoriteAdapter = FavoritesAdapter {
+        favoriteAdapter = FavoritesAdapter({
             val intent = Intent(requireContext(), DetailActivity::class.java)
             intent.putExtra(KEY_MOVIE, it.id)
             startActivity(intent)
+        }) {
+            detailViewModel.setBookmarked(
+                listOf(
+                    MovieEntity(
+                        it.id, it.title, it.posterPath, it.genre, it.releaseDate, !it.isBookmark,
+                        getCurrentDate()
+                    )
+                ), !it.isBookmark
+            )
+            requireContext().showMsg("${it.title} has been removed from favorites")
         }
         with(binding) {
             svPopular.apply {
@@ -64,7 +79,7 @@ class FavoritFragment : BaseFragment() {
             svPopular.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(p0: String?): Boolean {
                     p0?.let {
-                        favoritesViewModel.getSearchFavMovies(it)
+                        favoritesViewModel.getSearchFavMovies("%$it%")
                     }
                     resetSearchView()
                     return true
@@ -79,9 +94,9 @@ class FavoritFragment : BaseFragment() {
         favoritesViewModel.getFavMovies()
     }
 
-    private fun resetSearchView(){
+    private fun resetSearchView() {
         binding.svPopular.apply {
-            setQuery("",false)
+            setQuery("", false)
             clearFocus()
         }
     }
@@ -103,12 +118,15 @@ class FavoritFragment : BaseFragment() {
                 }
             }
         }
+        detailViewModel.observeSetBookmarked().onResult {
+            favoritesViewModel.getFavMovies()
+        }
     }
 
     override fun onResume() {
         super.onResume()
         resetSearchView()
-        binding.svPopular.setQuery("",false)
+        binding.svPopular.setQuery("", false)
         favoritesViewModel.getFavMovies()
     }
 

@@ -73,14 +73,14 @@ class HomeFragment : BaseFragment() {
         with(homeViewModel) {
             observeDiscoverMovies().onResult {
                 val listPoster = mutableListOf<String>()
-                it.results.take(5).forEach { data ->
+                it.take(5).forEach { data ->
                     data.backdropPath?.let { poster -> listPoster.add(poster) }
                 }
                 binding.vpBanner.adapter = BannerAdapter(listPoster.toList())
-                moviesAdapter.setData(it.results)
+                moviesAdapter.setData(it.take(10))
             }
             observeUpcomingMovies().onResult {
-                upcomingMovieAdapter.setData(it.results)
+                upcomingMovieAdapter.setData(it.results.take(10))
             }
             observeLoading().onResult {
                 if (it) {

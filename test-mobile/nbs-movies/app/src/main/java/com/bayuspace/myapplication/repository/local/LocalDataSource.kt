@@ -4,6 +4,7 @@ import com.bayuspace.myapplication.base.BaseDataSource
 import com.bayuspace.myapplication.base.ResourceState
 import com.bayuspace.myapplication.base.ResponseWrapper
 import com.bayuspace.myapplication.model.entity.MovieEntity
+import com.bayuspace.myapplication.model.entity.MoviePopularEntity
 
 class LocalDataSource(private val db: LocalDatabase) : BaseDataSource() {
     private suspend fun <T> getResult(request: suspend () -> T): ResourceState<ResponseWrapper<T>> {
@@ -24,4 +25,11 @@ class LocalDataSource(private val db: LocalDatabase) : BaseDataSource() {
 
     suspend fun getMovie(id: Int) =
         suspendDataResult { getResult { db.movieDao().getMovie(id) } }
+
+    suspend fun getPopMovies() = db.moviePopularDao().getMovies()
+
+    suspend fun searchPopMovies(query: String) = db.moviePopularDao().searchMovies(query)
+
+    suspend fun insertPopMovies(data: List<MoviePopularEntity>) =
+        suspendDataResult { getResult { db.moviePopularDao().insertMovies(data) } }
 }

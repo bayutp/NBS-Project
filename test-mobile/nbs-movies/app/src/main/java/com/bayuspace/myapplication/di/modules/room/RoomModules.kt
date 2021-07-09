@@ -15,6 +15,7 @@ object RoomModules : BaseModule {
     private val roomModule = module {
         single { provideDatabase(androidApplication()) }
         single { provideMovieDao(get()) }
+        single { provideMoviePopDao(get()) }
     }
 
     private fun provideDatabase(application: Application) =
@@ -24,4 +25,5 @@ object RoomModules : BaseModule {
             .build()
 
     private fun provideMovieDao(db: LocalDatabase) = db.movieDao()
+    private fun provideMoviePopDao(db: LocalDatabase) = db.moviePopularDao()
 }

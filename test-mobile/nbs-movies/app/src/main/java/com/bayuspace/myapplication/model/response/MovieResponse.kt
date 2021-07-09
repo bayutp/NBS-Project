@@ -1,6 +1,7 @@
 package com.bayuspace.myapplication.model.response
 
 import android.os.Parcelable
+import com.bayuspace.myapplication.model.entity.MoviePopularEntity
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
@@ -45,4 +46,15 @@ data class Result(
     val voteAverage: Double? = null,
     @SerializedName("vote_count")
     val voteCount: Int? = null
-):Parcelable
+):Parcelable{
+    companion object{
+        fun mapToMovieResponse(data: MoviePopularEntity) = Result(
+            id = data.id,
+            title = data.title,
+            posterPath = data.posterPath,
+            releaseDate = data.releaseDate,
+            overview = data.overview,
+            backdropPath = data.backdropPath
+        )
+    }
+}
