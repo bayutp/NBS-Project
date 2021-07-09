@@ -4,13 +4,12 @@ import com.bayuspace.myapplication.BuildConfig
 import com.bayuspace.myapplication.model.response.MovieCastingResponse
 import com.bayuspace.myapplication.model.response.MovieDetailResponse
 import com.bayuspace.myapplication.model.response.MovieResponse
-import com.bayuspace.myapplication.utils.getCurrentDate
+import com.bayuspace.myapplication.model.response.TrailerResponse
 import com.bayuspace.myapplication.utils.getCurrentYear
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
-import java.time.Year
 
 interface MovieApiService {
     @GET("discover/movie")
@@ -37,5 +36,11 @@ interface MovieApiService {
         @Path("id_movie") movieId: Int,
         @Query("api_key") apiKey: String = BuildConfig.API_KEY
     ): Response<MovieCastingResponse>
+
+    @GET("movie/{id_movie}/videos")
+    suspend fun getTrailerMovies(
+        @Path("id_movie") movieId: Int,
+        @Query("api_key") apiKey: String = BuildConfig.API_KEY
+    ): Response<TrailerResponse>
 
 }

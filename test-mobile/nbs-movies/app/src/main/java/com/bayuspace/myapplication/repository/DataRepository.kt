@@ -10,6 +10,7 @@ class DataRepository(private val local: LocalDataSource, private val remote: Rem
     suspend fun getUpcomingMovies() = remote.getUpcomingMovies()
     suspend fun getMovieDetail(id: Int) = remote.getMovieDetail(id)
     suspend fun getMovieCasting(id: Int) = remote.getMovieCasting(id)
+    suspend fun getTrailerMovies(id:Int) = remote.getTrailerMovies(id)
 
     suspend fun getMovieBookmarked() = local.getMovies()
     suspend fun searchMovieBookmarked(query: String) = local.searchMovies(query)

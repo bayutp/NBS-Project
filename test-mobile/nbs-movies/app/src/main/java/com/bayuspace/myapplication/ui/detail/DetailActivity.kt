@@ -1,5 +1,7 @@
 package com.bayuspace.myapplication.ui.detail
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.core.content.ContextCompat
@@ -15,6 +17,7 @@ import com.bayuspace.myapplication.utils.loadImage
 import com.bayuspace.myapplication.utils.showMsg
 import com.bayuspace.myapplication.utils.visible
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.*
 
 class DetailActivity : BaseActivity() {
     private lateinit var binding: ActivityDetailBinding
@@ -46,6 +49,7 @@ class DetailActivity : BaseActivity() {
                 getDetailMovie(id)
                 getMovieCastings(id)
                 checkBookmarked(id)
+                getTrailerMovie(id)
             }
         }
 
@@ -116,6 +120,13 @@ class DetailActivity : BaseActivity() {
                 showMsg(
                     it.msg ?: "Terjadi kesalahan! silahkan coba beberapa saat lagi :("
                 )
+            }
+            observeTrailerMovie().onResult { data ->
+                if (data.results[0].site.toLowerCase(Locale("ID")) == "youtube")
+                    binding.btnTrailer.setOnClickListener {
+                        val key = data.results[0].key
+                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("${BuildConfig.YT_URL}$key")))
+                    }
             }
         }
     }

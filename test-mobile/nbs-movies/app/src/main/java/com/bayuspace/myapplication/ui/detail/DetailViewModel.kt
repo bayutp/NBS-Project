@@ -8,6 +8,7 @@ import com.bayuspace.myapplication.base.ResourceState
 import com.bayuspace.myapplication.model.entity.MovieEntity
 import com.bayuspace.myapplication.model.response.MovieCastingResponse
 import com.bayuspace.myapplication.model.response.MovieDetailResponse
+import com.bayuspace.myapplication.model.response.TrailerResponse
 import com.bayuspace.myapplication.repository.DataRepository
 import com.bayuspace.myapplication.repository.network.RemoteDataSource
 import kotlinx.coroutines.launch
@@ -17,11 +18,13 @@ class DetailViewModel(private val repo: DataRepository) : BaseViewModel() {
     private val onGetMovieCastingsSuccess = MutableLiveData<MovieCastingResponse>()
     private val onCheckBookmarkedSuccess = MutableLiveData<Boolean>()
     private val onSetBookmarkedSuccess = MutableLiveData<Boolean>()
+    private val onGetTrailerMovieSuccess = MutableLiveData<TrailerResponse>()
 
     fun observeDetailMovie(): LiveData<MovieDetailResponse> = onGetDetailMovieSuccess
     fun observeMovieCastings(): LiveData<MovieCastingResponse> = onGetMovieCastingsSuccess
     fun observeCheckBookmarked(): LiveData<Boolean> = onCheckBookmarkedSuccess
     fun observeSetBookmarked(): LiveData<Boolean> = onSetBookmarkedSuccess
+    fun observeTrailerMovie(): LiveData<TrailerResponse> = onGetTrailerMovieSuccess
 
     fun getDetailMovie(id: Int) {
         isLoading.postValue(true)
@@ -91,6 +94,30 @@ class DetailViewModel(private val repo: DataRepository) : BaseViewModel() {
                 )
 
                 is ResourceState.Error -> errorResponse.postValue(state.error.errorData)
+
+                is ResourceState.Loading -> isLoading.postValue(true)
+            }
+        }
+    }
+
+    fun getTrailerMovie(id: Int) {
+        isLoading.postValue(true)
+        viewModelScope.launch {
+            when (val state = repo.getTrailerMovies(id)) {
+                is ResourceState.Success -> {
+                    isLoading.postValue(false)
+                    state.result.data?.let { result ->
+                        onGetTrailerMovieSuccess.postValue(result)
+                    }
+                }
+
+                is ResourceState.Error -> {
+                    isLoading.postValue(false)
+                    if (state.error.errorData?.msg?.contains(RemoteDataSource.NO_INTERNET) == true) noInternet.postValue(
+                        true
+                    )
+                    else errorResponse.postValue(state.error.errorData)
+                }
 
                 is ResourceState.Loading -> isLoading.postValue(true)
             }

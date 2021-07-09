@@ -41,6 +41,9 @@ class RemoteDataSource(private val service: MovieApiService) : BaseDataSource() 
     suspend fun getMovieCasting(movieId: Int) =
         suspendDataResult { getResult { service.getMovieCasting(movieId) } }
 
+    suspend fun getTrailerMovies(id:Int) =
+        suspendDataResult { getResult { service.getTrailerMovies(id) } }
+
     companion object {
         const val NO_INTERNET = "No internet connection!"
     }
