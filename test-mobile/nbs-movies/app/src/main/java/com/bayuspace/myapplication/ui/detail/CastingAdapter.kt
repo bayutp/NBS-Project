@@ -35,7 +35,9 @@ class CastingAdapter : RecyclerView.Adapter<CastingAdapter.ViewHolder>() {
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Casting) {
             with(binding) {
-                ivAvaCasting.loadImage("${BuildConfig.IMAGE_BASE_URL}${item.profilePath}")
+                item.profilePath?.let {
+                    ivAvaCasting.loadImage("${BuildConfig.IMAGE_BASE_URL}${it}")
+                }
                 tvNameCasting.text = item.name
             }
         }

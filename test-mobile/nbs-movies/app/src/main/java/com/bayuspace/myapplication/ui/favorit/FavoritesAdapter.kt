@@ -40,7 +40,11 @@ class FavoritesAdapter(private val listener: (MovieEntity) -> Unit) : RecyclerVi
                 ivPosterFavorite.loadImage("${BuildConfig.IMAGE_BASE_URL}${item.posterPath}")
                 tvTitleFavorite.text = item.title
                 tvReleaseFavorite.text = item.releaseDate.formatDate("yyyy-MM-dd", "yyyy")
-
+                var genre = ""
+                item.genre.forEachIndexed { index, dataGenre ->
+                    genre += if (index != item.genre.lastIndex) "${dataGenre.name}, " else dataGenre.name
+                }
+                tvCategoryFavorite.text = genre
                 itemView.setOnClickListener { listener(item) }
             }
         }
