@@ -3,11 +3,14 @@ package com.bayuspace.myapplication.ui.popular
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bayuspace.myapplication.BuildConfig
 import com.bayuspace.myapplication.databinding.ItemPopularBinding
+import com.bayuspace.myapplication.model.response.Result
+import com.bayuspace.myapplication.utils.loadImage
 
-class PopularAdapter : RecyclerView.Adapter<PopularAdapter.ViewHolder>() {
+class PopularAdapter(private val listener: (Result) -> Unit) : RecyclerView.Adapter<PopularAdapter.ViewHolder>() {
 
-    private val listItem = mutableListOf<Int>()
+    private val listItem = mutableListOf<Result>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemPopularBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -22,7 +25,7 @@ class PopularAdapter : RecyclerView.Adapter<PopularAdapter.ViewHolder>() {
         return listItem.size
     }
 
-    fun setData(items: List<Int>) {
+    fun setData(items: List<Result>) {
         listItem.clear()
         listItem.addAll(items)
         notifyDataSetChanged()
@@ -30,11 +33,12 @@ class PopularAdapter : RecyclerView.Adapter<PopularAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val binding: ItemPopularBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: Int) {
+        fun bind(item: Result) {
             with(binding) {
-                ivPosterPopular.setImageResource(item)
-                tvTitlePopular.text = "Spiderman"
-                tvDescPoppular.text = "Spider-Man is a superhero created by writer-editor Stan Lee and writer-artist Steve Ditko. He first appeared in the anthology comic book Amazing Fantasy #15 in the Silver Age of Comic Books."
+                ivPosterPopular.loadImage("${BuildConfig.IMAGE_BASE_URL}${item.backdropPath}")
+                tvTitlePopular.text = item.title
+                tvDescPoppular.text = item.overview
+                itemView.setOnClickListener { listener(item) }
             }
         }
     }
