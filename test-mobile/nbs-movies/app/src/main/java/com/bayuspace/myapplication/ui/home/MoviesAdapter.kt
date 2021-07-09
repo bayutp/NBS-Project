@@ -8,7 +8,7 @@ import com.bayuspace.myapplication.databinding.ItemMoviesBinding
 import com.bayuspace.myapplication.model.response.Result
 import com.bayuspace.myapplication.utils.loadImage
 
-class MoviesAdapter : RecyclerView.Adapter<MoviesAdapter.ViewHolder>() {
+class MoviesAdapter(private val listener: (Result) -> Unit) : RecyclerView.Adapter<MoviesAdapter.ViewHolder>() {
 
     private val listItem = mutableListOf<Result>()
 
@@ -35,6 +35,7 @@ class MoviesAdapter : RecyclerView.Adapter<MoviesAdapter.ViewHolder>() {
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Result) {
             binding.ivPosterMovies.loadImage("${BuildConfig.IMAGE_BASE_URL}${item.backdropPath}")
+            itemView.setOnClickListener { listener(item) }
         }
     }
 }

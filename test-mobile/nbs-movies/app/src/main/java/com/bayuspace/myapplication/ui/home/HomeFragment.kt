@@ -1,14 +1,15 @@
 package com.bayuspace.myapplication.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bayuspace.myapplication.R
 import com.bayuspace.myapplication.base.BaseFragment
 import com.bayuspace.myapplication.databinding.FragmentHomeBinding
+import com.bayuspace.myapplication.ui.detail.DetailActivity
 import com.bayuspace.myapplication.ui.home.banner.BannerAdapter
 import com.bayuspace.myapplication.utils.gone
 import com.bayuspace.myapplication.utils.showMsg
@@ -31,17 +32,13 @@ class HomeFragment : BaseFragment() {
     }
 
     override fun onViewReady(savedInstanceState: Bundle?) {
-        moviesAdapter = MoviesAdapter()
-        upcomingMovieAdapter = MoviesAdapter()
+        moviesAdapter = MoviesAdapter { moveToDetail(it.id) }
+        upcomingMovieAdapter = MoviesAdapter { moveToDetail(it.id) }
         with(binding) {
             toolbarHome.apply {
                 inflateMenu(R.menu.home_menu)
                 setOnMenuItemClickListener {
-                    if (it.itemId == R.id.menu_notif) Toast.makeText(
-                        requireContext(),
-                        R.string.coming_soon,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    if (it.itemId == R.id.menu_notif) requireContext().showMsg(getString(R.string.coming_soon))
                     true
                 }
             }
@@ -64,6 +61,12 @@ class HomeFragment : BaseFragment() {
             getDiscoverMovies()
             getUpcomingMovies()
         }
+    }
+
+    private fun moveToDetail(id: Int) {
+        val intent = Intent(requireContext(), DetailActivity::class.java)
+        intent.putExtra(KEY_MOVIE, id)
+        startActivity(intent)
     }
 
     override fun observeData() {
@@ -93,6 +96,7 @@ class HomeFragment : BaseFragment() {
                 }
             }
             observeError().onResult {
+                binding.containerHome.gone()
                 requireContext().showMsg(
                     it.msg ?: "Terjadi kesalahan! silahkan coba beberapa saat lagi :("
                 )
@@ -103,5 +107,9 @@ class HomeFragment : BaseFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        const val KEY_MOVIE = "MOVIE_EXTRA"
     }
 }

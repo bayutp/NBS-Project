@@ -1,6 +1,7 @@
 package com.bayuspace.myapplication.di.modules.viewmodel
 
 import com.bayuspace.myapplication.di.modules.BaseModule
+import com.bayuspace.myapplication.ui.detail.DetailViewModel
 import com.bayuspace.myapplication.ui.home.HomeViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
@@ -12,6 +13,7 @@ object ViewModelModules : BaseModule{
 
     private val viewModelModule = module{
         viewModel { HomeViewModel(get()) }
+        viewModel { DetailViewModel(get()) }
     }
 
 }
