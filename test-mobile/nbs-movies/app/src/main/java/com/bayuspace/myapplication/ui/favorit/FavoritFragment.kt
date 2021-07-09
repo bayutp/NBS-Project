@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
+import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bayuspace.myapplication.base.BaseFragment
@@ -60,8 +61,29 @@ class FavoritFragment : BaseFragment() {
                     LinearLayoutManager(requireContext())
                 adapter = favoriteAdapter
             }
+            svPopular.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(p0: String?): Boolean {
+                    p0?.let {
+                        favoritesViewModel.getSearchFavMovies(it)
+                    }
+                    resetSearchView()
+                    return true
+                }
+
+                override fun onQueryTextChange(p0: String?): Boolean {
+                    return false
+                }
+
+            })
         }
         favoritesViewModel.getFavMovies()
+    }
+
+    private fun resetSearchView(){
+        binding.svPopular.apply {
+            setQuery("",false)
+            clearFocus()
+        }
     }
 
     override fun observeData() {
@@ -85,6 +107,8 @@ class FavoritFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
+        resetSearchView()
+        binding.svPopular.setQuery("",false)
         favoritesViewModel.getFavMovies()
     }
 
