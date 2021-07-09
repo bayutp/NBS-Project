@@ -8,7 +8,7 @@ import com.bayuspace.myapplication.model.entity.MoviePopularEntity
 
 @Dao
 interface MoviePopularDao {
-    @Query("SELECT * FROM tbl_movie_popular")
+    @Query("SELECT * FROM tbl_movie_popular ORDER BY created_at ASC")
     suspend fun getMovies(): List<MoviePopularEntity>
 
     @Query("SELECT * FROM tbl_movie_popular WHERE title LIKE :query")

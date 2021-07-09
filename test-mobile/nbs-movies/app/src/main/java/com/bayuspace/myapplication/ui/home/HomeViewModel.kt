@@ -25,8 +25,43 @@ class HomeViewModel(private val repo: DataRepository) : BaseViewModel() {
         isLoading.postValue(true)
         viewModelScope.launch {
             val data = repo.getPopMovies()
-            if (data.isEmpty()) getDiscoverMoviesFromRemote()
-            else {
+            if (data.isEmpty()) {
+                when (val state = repo.getDiscoverMovies()) {
+                    is ResourceState.Success -> {
+                        isLoading.postValue(false)
+                        state.result.data?.let { result ->
+                            onGetDiscoverMoviesSuccess.postValue(result.results)
+                            repo.insertPopMovies(result.results.flatMap {
+                                listOf(
+                                    MoviePopularEntity.mapToMoviePopEntity(it)
+                                )
+                            })
+                        }
+                    }
+
+                    is ResourceState.Error -> {
+                        isLoading.postValue(false)
+                        if (state.error.errorData?.msg?.contains(RemoteDataSource.NO_INTERNET) == true) noInternet.postValue(
+                            true
+                        )
+                        else errorResponse.postValue(state.error.errorData)
+                    }
+
+                    is ResourceState.Loading -> isLoading.postValue(true)
+                }
+            } else {
+                isLoading.postValue(false)
+                when (val state = repo.getDiscoverMovies()) {
+                    is ResourceState.Success -> {
+                        state.result.data?.let { result ->
+                            repo.insertPopMovies(result.results.flatMap {
+                                listOf(
+                                    MoviePopularEntity.mapToMoviePopEntity(it)
+                                )
+                            })
+                        }
+                    }
+                }
                 onGetDiscoverMoviesSuccess.postValue(data.flatMap {
                     listOf(
                         Result.mapToMovieResponse(
@@ -34,34 +69,7 @@ class HomeViewModel(private val repo: DataRepository) : BaseViewModel() {
                         )
                     )
                 })
-                getDiscoverMoviesFromRemote()
             }
-        }
-    }
-
-    private suspend fun getDiscoverMoviesFromRemote() {
-        when (val state = repo.getDiscoverMovies()) {
-            is ResourceState.Success -> {
-                isLoading.postValue(false)
-                state.result.data?.let { result ->
-                    onGetDiscoverMoviesSuccess.postValue(result.results)
-                    repo.insertPopMovies(result.results.flatMap {
-                        listOf(
-                            MoviePopularEntity.mapToMoviePopEntity(it)
-                        )
-                    })
-                }
-            }
-
-            is ResourceState.Error -> {
-                isLoading.postValue(false)
-                if (state.error.errorData?.msg?.contains(RemoteDataSource.NO_INTERNET) == true) noInternet.postValue(
-                    true
-                )
-                else errorResponse.postValue(state.error.errorData)
-            }
-
-            is ResourceState.Loading -> isLoading.postValue(true)
         }
     }
 
