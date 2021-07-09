@@ -3,14 +3,19 @@ package com.bayuspace.myapplication.ui.favorit
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bayuspace.myapplication.BuildConfig
 import com.bayuspace.myapplication.databinding.ItemFavoritesBinding
+import com.bayuspace.myapplication.model.entity.MovieEntity
+import com.bayuspace.myapplication.utils.formatDate
+import com.bayuspace.myapplication.utils.loadImage
 
-class FavoritesAdapter : RecyclerView.Adapter<FavoritesAdapter.ViewHolder>() {
+class FavoritesAdapter(private val listener: (MovieEntity) -> Unit) : RecyclerView.Adapter<FavoritesAdapter.ViewHolder>() {
 
-    private val listItem = mutableListOf<Int>()
+    private val listItem = mutableListOf<MovieEntity>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemFavoritesBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemFavoritesBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -22,7 +27,7 @@ class FavoritesAdapter : RecyclerView.Adapter<FavoritesAdapter.ViewHolder>() {
         return listItem.size
     }
 
-    fun setData(items: List<Int>) {
+    fun setData(items: List<MovieEntity>) {
         listItem.clear()
         listItem.addAll(items)
         notifyDataSetChanged()
@@ -30,12 +35,13 @@ class FavoritesAdapter : RecyclerView.Adapter<FavoritesAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val binding: ItemFavoritesBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: Int) {
+        fun bind(item: MovieEntity) {
             with(binding) {
-                ivPosterFavorite.setImageResource(item)
-                tvTitleFavorite.text = "Spiderman"
-                tvReleaseFavorite.text = "2020"
-                tvCategoryFavorite.text = "Action"
+                ivPosterFavorite.loadImage("${BuildConfig.IMAGE_BASE_URL}${item.posterPath}")
+                tvTitleFavorite.text = item.title
+                tvReleaseFavorite.text = item.releaseDate.formatDate("yyyy-MM-dd", "yyyy")
+
+                itemView.setOnClickListener { listener(item) }
             }
         }
     }

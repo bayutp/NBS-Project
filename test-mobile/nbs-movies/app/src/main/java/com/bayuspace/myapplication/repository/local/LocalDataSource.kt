@@ -15,13 +15,9 @@ class LocalDataSource(private val db: LocalDatabase) : BaseDataSource() {
         }
     }
 
-    suspend fun getMovies() {
-        suspendDataResult { getResult { db.movieDao().getMovies() } }
-    }
+    suspend fun getMovies() = db.movieDao().getMovies()
 
-    suspend fun searchMovies(query: String) {
-        suspendDataResult { getResult { db.movieDao().searchMovies(query) } }
-    }
+    suspend fun searchMovies(query: String) = db.movieDao().searchMovies(query)
 
     suspend fun insertMovies(data: List<MovieEntity>) =
         suspendDataResult { getResult { db.movieDao().insertMovies(data) } }

@@ -13,4 +13,5 @@
     <string name="add_to_favorite">Add Favorite</string>
     <string name="casting">Casting</string>
     <string name="remove_from_fav">Remove favorite</string>
+    <string name="empty_data">Data tidak ditemukan :(</string>
 </resources>
