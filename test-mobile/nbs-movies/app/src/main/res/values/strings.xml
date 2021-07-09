@@ -10,6 +10,7 @@
     <string name="banner">banner</string>
     <string name="hint">Search</string>
     <string name="watch_trailer">Watch Trailer</string>
-    <string name="add_to_favorite">Add to Favorite</string>
+    <string name="add_to_favorite">Add Favorite</string>
     <string name="casting">Casting</string>
+    <string name="remove_from_fav">Remove favorite</string>
 </resources>

@@ -104,12 +104,13 @@
 
         <TextView
             android:id="@+id/tv_description"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:fontFamily="@font/sfpro_regular"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
             app:layout_constraintStart_toStartOf="@id/btn_trailer"
+            app:layout_constraintEnd_toEndOf="@id/btn_favorites"
             app:layout_constraintTop_toBottomOf="@id/iv_movie_detail" />
 
         <TextView
