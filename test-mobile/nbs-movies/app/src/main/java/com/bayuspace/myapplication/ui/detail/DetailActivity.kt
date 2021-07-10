@@ -122,11 +122,17 @@ class DetailActivity : BaseActivity() {
                 )
             }
             observeTrailerMovie().onResult { data ->
-                if (data.results[0].site.toLowerCase(Locale("ID")) == "youtube")
-                    binding.btnTrailer.setOnClickListener {
-                        val key = data.results[0].key
-                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("${BuildConfig.YT_URL}$key")))
-                    }
+                if (data.results.isNotEmpty())
+                    if (data.results[0].site.toLowerCase(Locale("ID")) == "youtube")
+                        binding.btnTrailer.setOnClickListener {
+                            val key = data.results[0].key
+                            startActivity(
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse("${BuildConfig.YT_URL}$key")
+                                )
+                            )
+                        }
             }
         }
     }

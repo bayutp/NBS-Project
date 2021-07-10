@@ -34,7 +34,7 @@ class MoviesAdapter(private val listener: (Result) -> Unit) : RecyclerView.Adapt
     inner class ViewHolder(private val binding: ItemMoviesBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Result) {
-            binding.ivPosterMovies.loadImage("${BuildConfig.IMAGE_BASE_URL}${item.backdropPath}")
+            binding.ivPosterMovies.loadImage("${BuildConfig.IMAGE_BASE_URL}${item.backdropPath?:item.posterPath}")
             itemView.setOnClickListener { listener(item) }
         }
     }
