@@ -66,7 +66,7 @@ class DetailActivity : BaseActivity() {
                         genre += if (index != data.genres.lastIndex) "${dataGenre.name} - " else dataGenre.name
                     }
 
-                    ivMovieDetail.loadImage("${BuildConfig.IMAGE_BASE_URL}${data.posterPath}")
+                    ivMovieDetail.loadImage("${BuildConfig.IMAGE_BASE_URL}${data.backdropPath ?: data.posterPath}")
                     tvTitle.text = data.title
                     tvTimes.text = if (hours < 1) "$minutes m" else "$hours h $minutes m"
                     tvCategory.text = genre

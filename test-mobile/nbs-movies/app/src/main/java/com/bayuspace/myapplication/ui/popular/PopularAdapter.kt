@@ -35,7 +35,7 @@ class PopularAdapter(private val listener: (Result) -> Unit) : RecyclerView.Adap
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Result) {
             with(binding) {
-                ivPosterPopular.loadImage("${BuildConfig.IMAGE_BASE_URL}${item.backdropPath}")
+                ivPosterPopular.loadImage("${BuildConfig.IMAGE_BASE_URL}${item.posterPath}")
                 tvTitlePopular.text = item.title
                 tvDescPoppular.text = item.overview
                 itemView.setOnClickListener { listener(item) }
